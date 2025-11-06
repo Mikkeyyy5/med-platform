@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль - Медицинская платформа</title>
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #0d47a1;
+            --secondary: #34a853;
+            --warning: #f9ab00;
+            --danger: #ea4335;
+            --light: #f8f9fa;
+            --dark: #202124;
+            --gray: #5f6368;
+            --light-gray: #dadce0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-left: 10px;
+        }
+        
+        .logo-icon {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 25px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: var(--gray);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover, nav ul li a.active {
+            color: var(--primary);
+        }
+        
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            margin-right: 10px;
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(26, 115, 232, 0.1);
+        }
+        
+        .btn-success {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        /* User Profile in Header */
+        .user-profile {
+            display: flex;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .profile-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-right: 10px;
+        }
+        
+        .profile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            min-width: 200px;
+            z-index: 1000;
+        }
+        
+        .user-profile:hover .profile-menu {
+            display: block;
+        }
+        
+        .profile-info {
+            padding: 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .logout-btn {
+            width: 100%;
+            padding: 10px 15px;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background-color: rgba(26, 115, 232, 0.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 40px 0;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            color: var(--dark);
+        }
+
+        /* Profile Layout */
+        .profile-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+
+        .profile-sidebar {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            height: fit-content;
+        }
+
+        .profile-content {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .user-avatar {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .avatar-icon {
+            font-size: 5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .user-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .user-email {
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+
+        .profile-nav {
+            list-style: none;
+        }
+
+        .profile-nav li {
+            margin-bottom: 10px;
+        }
+
+        .profile-nav a {
+            display: block;
+            padding: 12px 15px;
+            text-decoration: none;
+            color: var(--dark);
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .profile-nav a:hover, .profile-nav a.active {
+            background-color: rgba(26, 115, 232, 0.1);
+            color: var(--primary);
+        }
+
+        .profile-nav i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--light-gray);
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--gray);
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .tab:hover {
+            background-color: rgba(26, 115, 232, 0.05);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Appointments */
+        .appointments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .appointment-card {
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .appointment-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .appointment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .appointment-doctor {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .appointment-specialty {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .appointment-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-scheduled {
+            background-color: rgba(26, 115, 232, 0.1);
+            color: var(--primary);
+        }
+
+        .status-completed {
+            background-color: rgba(52, 168, 83, 0.1);
+            color: var(--secondary);
+        }
+
+        .status-cancelled {
+            background-color: rgba(234, 67, 53, 0.1);
+            color: var(--danger);
+        }
+
+        .appointment-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-weight: 500;
+        }
+
+        .appointment-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            color: var(--light-gray);
+            margin-bottom: 20px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+            margin-top: 60px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #bdc1c6;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #3c4043;
+            color: #9aa0a6;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                padding: 15px 0;
+            }
+            
+            nav ul {
+                margin: 15px 0;
+            }
+            
+            .user-actions {
+                margin-top: 10px;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .profile-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            .tab {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-stethoscope logo-icon"></i>
+                    <h1>МедПлатформа</h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="med.html">Главная</a></li>
+                        <li><a href="Appeal.html">Обращения</a></li>
+                        <li><a href="doctor.html">Врачи</a></li>
+                        <li><a href="#" class="active">Профиль</a></li>
+                    </ul>
+                </nav>
+                <div class="user-actions">
+                    <button class="btn btn-outline" id="login-btn">Войти</button>
+                    <button class="btn btn-primary" id="register-btn">Регистрация</button>
+                    <div class="user-profile" id="user-profile" style="display: none;">
+                        <a href="profile.html" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+                            <div class="profile-icon">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <div class="profile-info">
+                                <span id="user-name">Пользователь</span>
+                            </div>
+                        </a>
+                        <div class="profile-menu">
+                            <div class="profile-info">
+                                <span id="user-name-menu">Пользователь</span>
+                            </div>
+                            <button class="logout-btn" onclick="logout()">
+                                <i class="fas fa-sign-out-alt"></i> Выйти
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <section class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Мой профиль</h1>
+            </div>
+
+            <div class="profile-layout">
+                <!-- Sidebar -->
+                <div class="profile-sidebar">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-circle avatar-icon"></i>
+                        <div class="user-name" id="profile-user-name">Иван Иванов</div>
+                        <div class="user-email" id="profile-user-email">user@example.com</div>
+                    </div>
+                    
+                    <ul class="profile-nav">
+                        <li><a href="#" class="active" onclick="openProfileTab('appointments')"><i class="fas fa-calendar-check"></i> Мои приёмы</a></li>
+                        <li><a href="#" onclick="openProfileTab('personal-info')"><i class="fas fa-user-edit"></i> Личная информация</a></li>
+                        <li><a href="#" onclick="openProfileTab('medical-info')"><i class="fas fa-file-medical"></i> Медицинская карта</a></li>
+                        <li><a href="#" onclick="openProfileTab('settings')"><i class="fas fa-cog"></i> Настройки</a></li>
+                    </ul>
+                </div>
+
+                <!-- Content -->
+                <div class="profile-content">
+                    <!-- Мои приёмы -->
+                    <div id="appointments" class="tab-content active">
+                        <h2 style="margin-bottom: 20px;">Мои приёмы у врача</h2>
+                        
+                        <div class="tabs">
+                            <button class="tab active" onclick="filterAppointments('all')">Все приёмы</button>
+                            <button class="tab" onclick="filterAppointments('scheduled')">Запланированные</button>
+                            <button class="tab" onclick="filterAppointments('completed')">Завершённые</button>
+                            <button class="tab" onclick="filterAppointments('cancelled')">Отменённые</button>
+                        </div>
+
+                        <div class="appointments-list" id="appointments-list">
+                            <!-- Приёмы будут загружаться через JavaScript -->
+                        </div>
+
+                        <div id="no-appointments" class="empty-state" style="display: none;">
+                            <i class="fas fa-calendar-times empty-icon"></i>
+                            <h3>У вас пока нет приёмов</h3>
+                            <p>Запишитесь на приём к врачу, чтобы увидеть его здесь</p>
+                            <button class="btn btn-primary" style="margin-top: 20px;" onclick="window.location.href='Appeal.html'">Записаться на приём</button>
+                        </div>
+                    </div>
+
+                    <!-- Личная информация -->
+                    <div id="personal-info" class="tab-content">
+                        <h2 style="margin-bottom: 20px;">Личная информация</h2>
+                        
+                        <form id="personal-info-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="first-name">Имя</label>
+                                    <input type="text" id="first-name" class="form-control" value="Иван">
+                                </div>
+                                <div class="form-group">
+                                    <label for="last-name">Фамилия</label>
+                                    <input type="text" id="last-name" class="form-control" value="Иванов">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" class="form-control" value="user@example.com">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="phone">Телефон</label>
+                                <input type="tel" id="phone" class="form-control" value="+7 (900) 123-45-67">
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="birth-date">Дата рождения</label>
+                                    <input type="date" id="birth-date" class="form-control" value="1985-05-15">
+                                </div>
+                                <div class="form-group">
+                                    <label for="gender">Пол</label>
+                                    <select id="gender" class="form-control">
+                                        <option value="male">Мужской</option>
+                                        <option value="female">Женский</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="city">Город</label>
+                                    <input type="text" id="city" class="form-control" value="Москва">
+                                </div>
+                                <div class="form-group">
+                                    <label for="address">Адрес</label>
+                                    <input type="text" id="address" class="form-control" value="ул. Примерная, д. 10, кв. 25">
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                        </form>
+                    </div>
+
+                    <!-- Медицинская карта -->
+                    <div id="medical-info" class="tab-content">
+                        <h2 style="margin-bottom: 20px;">Медицинская карта</h2>
+                        
+                        <div class="form-group">
+                            <label for="blood-type">Группа крови</label>
+                            <select id="blood-type" class="form-control">
+                                <option value="">Не указана</option>
+                                <option value="1">I (O)</option>
+                                <option value="2">II (A)</option>
+                                <option value="3">III (B)</option>
+                                <option value="4">IV (AB)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="allergies">Аллергии</label>
+                            <textarea id="allergies" class="form-control" rows="3" placeholder="Укажите известные аллергии"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="chronic-diseases">Хронические заболевания</label>
+                            <textarea id="chronic-diseases" class="form-control" rows="3" placeholder="Укажите хронические заболевания"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="medications">Постоянно принимаемые лекарства</label>
+                            <textarea id="medications" class="form-control" rows="3" placeholder="Укажите постоянно принимаемые лекарства"></textarea>
+                        </div>
+                        
+                        <button class="btn btn-primary">Сохранить медицинскую информацию</button>
+                    </div>
+
+                    <!-- Настройки -->
+                    <div id="settings" class="tab-content">
+                        <h2 style="margin-bottom: 20px;">Настройки</h2>
+                        
+                        <div class="form-group">
+                            <label for="notifications">Уведомления</label>
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" checked> Email уведомления
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" checked> SMS уведомления
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox"> Push уведомления
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="language">Язык</label>
+                            <select id="language" class="form-control">
+                                <option value="ru">Русский</option>
+                                <option value="en">English</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="timezone">Часовой пояс</label>
+                            <select id="timezone" class="form-control">
+                                <option value="+3">Москва (UTC+3)</option>
+                                <option value="+4">Самара (UTC+4)</option>
+                                <option value="+5">Екатеринбург (UTC+5)</option>
+                            </select>
+                        </div>
+                        
+                        <button class="btn btn-primary">Сохранить настройки</button>
+                        
+                        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--light-gray);">
+                            <h3 style="margin-bottom: 15px;">Опасная зона</h3>
+                            <p style="margin-bottom: 15px; color: var(--gray);">Удаление аккаунта невозможно отменить. Пожалуйста, будьте уверены в своем решении.</p>
+                            <button class="btn btn-danger">Удалить аккаунт</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>МедПлатформа</h3>
+                    <ul>
+                        <li><a href="#">О нас</a></li>
+                        <li><a href="#">Контакты</a></li>
+                        <li><a href="#">Вакансии</a></li>
+                        <li><a href="#">Партнеры</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Пациентам</h3>
+                    <ul>
+                        <li><a href="#">Как это работает</a></li>
+                        <li><a href="#">Частые вопросы</a></li>
+                        <li><a href="#">Отзывы</a></li>
+                        <li><a href="#">Безопасность данных</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Врачам</h3>
+                    <ul>
+                        <li><a href="doctor.html">Присоединиться к платформе</a></li>
+                        <li><a href="#">Документация</a></li>
+                        <li><a href="#">Обучение</a></li>
+                        <li><a href="#">Поддержка</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Контакты</h3>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> +7 (800) 123-45-67</li>
+                        <li><i class="fas fa-envelope"></i> info@medplatform.ru</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Астрахань, ул. Медицинская, 15</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 МедПлатформа. Все права защищены.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Универсальные функции авторизации
+        function checkAuthStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const userName = localStorage.getItem('userName') || 'Пользователь';
+            const userEmail = localStorage.getItem('userEmail') || 'user@example.com';
+            
+            if (isLoggedIn) {
+                showUserProfile(userName);
+                loadUserProfile(userName, userEmail);
+                loadUserAppointments();
+            } else {
+                showAuthButtons();
+                // Если пользователь не авторизован, перенаправляем на страницу входа
+                window.location.href = 'reg.html';
+            }
+        }
+
+        function showAuthButtons() {
+            const loginBtn = document.getElementById('login-btn');
+            const registerBtn = document.getElementById('register-btn');
+            const userProfile = document.getElementById('user-profile');
+            
+            if (loginBtn) loginBtn.style.display = 'block';
+            if (registerBtn) registerBtn.style.display = 'block';
+            if (userProfile) userProfile.style.display = 'none';
+        }
+
+        function showUserProfile(userName) {
+            const loginBtn = document.getElementById('login-btn');
+            const registerBtn = document.getElementById('register-btn');
+            const userProfile = document.getElementById('user-profile');
+            const userNameElements = document.querySelectorAll('#user-name, #user-name-menu');
+            
+            if (loginBtn) loginBtn.style.display = 'none';
+            if (registerBtn) registerBtn.style.display = 'none';
+            if (userProfile) userProfile.style.display = 'flex';
+            
+            userNameElements.forEach(element => {
+                if (element) element.textContent = userName;
+            });
+        }
+
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userEmail');
+            localStorage.removeItem('userAppointments');
+            showAuthButtons();
+            alert('Вы успешно вышли из системы');
+            window.location.href = 'med.html';
+        }
+
+        function setupAuthButtons() {
+            const loginBtn = document.getElementById('login-btn');
+            const registerBtn = document.getElementById('register-btn');
+            
+            if (loginBtn) {
+                loginBtn.addEventListener('click', function() {
+                    window.location.href = 'reg.html';
+                });
+            }
+            
+            if (registerBtn) {
+                registerBtn.addEventListener('click', function() {
+                    window.location.href = 'reg.html';
+                });
+            }
+        }
+
+        // Функции для профиля
+        function openProfileTab(tabName) {
+            const tabs = document.querySelectorAll('.profile-nav a');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(tab => tab.classList.remove('active'));
+            
+            event.currentTarget.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        function loadUserProfile(userName, userEmail) {
+            document.getElementById('profile-user-name').textContent = userName;
+            document.getElementById('profile-user-email').textContent = userEmail;
+            
+            // Загружаем данные пользователя из localStorage
+            const userData = JSON.parse(localStorage.getItem('userData')) || {};
+            
+            // Заполняем форму личной информации
+            if (userData.firstName) document.getElementById('first-name').value = userData.firstName;
+            if (userData.lastName) document.getElementById('last-name').value = userData.lastName;
+            if (userData.email) document.getElementById('email').value = userData.email;
+            if (userData.phone) document.getElementById('phone').value = userData.phone;
+            if (userData.birthDate) document.getElementById('birth-date').value = userData.birthDate;
+            if (userData.gender) document.getElementById('gender').value = userData.gender;
+            if (userData.city) document.getElementById('city').value = userData.city;
+            if (userData.address) document.getElementById('address').value = userData.address;
+            
+            // Заполняем медицинскую информацию
+            if (userData.bloodType) document.getElementById('blood-type').value = userData.bloodType;
+            if (userData.allergies) document.getElementById('allergies').value = userData.allergies;
+            if (userData.chronicDiseases) document.getElementById('chronic-diseases').value = userData.chronicDiseases;
+            if (userData.medications) document.getElementById('medications').value = userData.medications;
+        }
+
+        function loadUserAppointments() {
+            const appointments = JSON.parse(localStorage.getItem('userAppointments')) || [];
+            const appointmentsList = document.getElementById('appointments-list');
+            const noAppointments = document.getElementById('no-appointments');
+            
+            console.log('Загружено приёмов:', appointments.length);
+            
+            if (appointments.length === 0) {
+                appointmentsList.style.display = 'none';
+                noAppointments.style.display = 'block';
+                return;
+            }
+            
+            appointmentsList.style.display = 'flex';
+            noAppointments.style.display = 'none';
+            appointmentsList.innerHTML = '';
+            
+            // Сортируем приёмы по дате (сначала ближайшие)
+            appointments.sort((a, b) => new Date(a.date + ' ' + a.time) - new Date(b.date + ' ' + b.time));
+            
+            appointments.forEach(appointment => {
+                const appointmentCard = document.createElement('div');
+                appointmentCard.className = 'appointment-card';
+                appointmentCard.setAttribute('data-status', appointment.status);
+                
+                let statusClass = 'status-scheduled';
+                let statusText = 'Запланирован';
+                
+                if (appointment.status === 'completed') {
+                    statusClass = 'status-completed';
+                    statusText = 'Завершён';
+                } else if (appointment.status === 'cancelled') {
+                    statusClass = 'status-cancelled';
+                    statusText = 'Отменён';
+                }
+                
+                // Форматируем дату для отображения
+                const appointmentDate = new Date(appointment.date);
+                const formattedDate = appointmentDate.toLocaleDateString('ru-RU', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                
+                appointmentCard.innerHTML = `
+                    <div class="appointment-header">
+                        <div>
+                            <div class="appointment-doctor">${appointment.doctor}</div>
+                            <div class="appointment-specialty">${appointment.specialty}</div>
+                        </div>
+                        <span class="appointment-status ${statusClass}">${statusText}</span>
+                    </div>
+                    <div class="appointment-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Дата и время</span>
+                            <span class="detail-value">${formattedDate} в ${appointment.time}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Формат приёма</span>
+                            <span class="detail-value">${appointment.format}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Место приёма</span>
+                            <span class="detail-value">${appointment.location}</span>
+                        </div>
+                        ${appointment.patient ? `
+                        <div class="detail-item">
+                            <span class="detail-label">Пациент</span>
+                            <span class="detail-value">${appointment.patient}, ${appointment.age} лет</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                    <div class="appointment-actions">
+                        ${appointment.status === 'scheduled' ? 
+                            `<button class="btn btn-outline" onclick="cancelAppointment('${appointment.id}')">Отменить приём</button>
+                             <button class="btn btn-primary" onclick="rescheduleAppointment('${appointment.id}')">Перенести</button>` : 
+                            ''}
+                        ${appointment.status === 'completed' ? 
+                            `<button class="btn btn-outline" onclick="viewAppointmentDetails('${appointment.id}')">Подробности</button>` : 
+                            ''}
+                    </div>
+                `;
+                
+                appointmentsList.appendChild(appointmentCard);
+            });
+        }
+
+        function filterAppointments(status) {
+            const appointments = document.querySelectorAll('.appointment-card');
+            const tabs = document.querySelectorAll('#appointments .tab');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            appointments.forEach(appointment => {
+                if (status === 'all' || appointment.getAttribute('data-status') === status) {
+                    appointment.style.display = 'flex';
+                } else {
+                    appointment.style.display = 'none';
+                }
+            });
+        }
+
+        function cancelAppointment(appointmentId) {
+            if (confirm('Вы уверены, что хотите отменить приём?')) {
+                let appointments = JSON.parse(localStorage.getItem('userAppointments')) || [];
+                appointments = appointments.map(appointment => {
+                    if (appointment.id === appointmentId) {
+                        return {...appointment, status: 'cancelled'};
+                    }
+                    return appointment;
+                });
+                
+                localStorage.setItem('userAppointments', JSON.stringify(appointments));
+                loadUserAppointments();
+                alert('Приём отменен');
+            }
+        }
+
+        function rescheduleAppointment(appointmentId) {
+            alert('Функция переноса приёма будет доступна в ближайшее время');
+        }
+
+        function viewAppointmentDetails(appointmentId) {
+            alert('Детали приёма будут доступны в ближайшее время');
+        }
+
+        // Сохранение данных профиля
+        document.getElementById('personal-info-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userData = {
+                firstName: document.getElementById('first-name').value,
+                lastName: document.getElementById('last-name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                birthDate: document.getElementById('birth-date').value,
+                gender: document.getElementById('gender').value,
+                city: document.getElementById('city').value,
+                address: document.getElementById('address').value
+            };
+            
+            localStorage.setItem('userData', JSON.stringify(userData));
+            localStorage.setItem('userName', `${userData.firstName} ${userData.lastName}`);
+            localStorage.setItem('userEmail', userData.email);
+            
+            // Обновляем отображение имени в профиле
+            document.getElementById('profile-user-name').textContent = `${userData.firstName} ${userData.lastName}`;
+            document.getElementById('profile-user-email').textContent = userData.email;
+            
+            // Обновляем имя в хедере
+            const userNameElements = document.querySelectorAll('#user-name, #user-name-menu');
+            userNameElements.forEach(element => {
+                if (element) element.textContent = `${userData.firstName} ${userData.lastName}`;
+            });
+            
+            alert('Данные успешно сохранены');
+        });
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            setupAuthButtons();
+            
+            // Загружаем приёмы пользователя
+            loadUserAppointments();
+        });
+    </script>
+</body>
+</html>
